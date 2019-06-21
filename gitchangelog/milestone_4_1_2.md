@@ -1,18 +1,3 @@
-# git-changelog
-Generate Changelog.md
-
-# Usage
-
-Run following command
-
-```
-./gitchangelog.py --file change.log --view type --title "Milestone 4.1.2" > milestone_4_1_2.md
-```
-
-The content of `milestone_4_1_2.md` rendered like following 
-
-----
-
 # Milestone 4.1.2
 
 ## refactor

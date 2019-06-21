@@ -1,0 +1,8 @@
+be2f672 - [2019/06/21] refactor(utils/data/ip): refactor function `get_ip_default_route()` (John Doe)
+be2f672 - [2019/06/20] refactor(net/telnet): moved telnet code to `net/telnet/*.py` (Jane Doe)
+be2f672 - [2019/06/19] refactor(types/dict): moved `class Dict()` to `types/dict.py` (John Smith)
+be2f672 - [2019/06/18] feat(utils/data/tools): add `find_first` function (Marry Li)
+be2f672 - [2019/06/17] feat(utils/data/tools): add `exec_predicate_chain` function (Luke Cage)
+be2f672 - [2019/06/16] feat(types/dict): add `convert()` method to `Dict()` (Jassica Jones)
+be2f672 - [2019/06/15] feat(types/pageobject): add new type class `PageObject` (Will Smith)
+4fe3cde - [2019/06/19] feat(types/pageobject): Add load function in PageObject to load args (Bruce Lee)
