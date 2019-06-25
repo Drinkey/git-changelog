@@ -17,7 +17,15 @@ def gitlog_parser(log: str) -> List[Dict]:
     :return: A list of dict that including parsed git logs
     :rtype: List[Dict]
     """
-    pattern = re.compile(r".*-\s\[(.*)\]\s(.*)\((.*)\):\s(.*)\s\((.*)\)")
+    pattern = re.compile(r"""
+        .*-\s
+        \[(.*)\]\s    # date
+        (.*)          # type
+        \((.*)\):\s   # scope
+        (.*)\s        # title
+        \((.*)\)      # author
+        """, re.VERBOSE)
+    
     gitlogs = list()
     for line in log.split('\n'):
         if not line:
