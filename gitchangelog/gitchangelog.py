@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import re
-from typing import List, Dict
+from typing import List, Dict, Tuple
 import click
 
 def gitlog_parser(log: str) -> List[Dict]:
@@ -58,45 +58,57 @@ def group_by_key(key: str, gitlogs) -> Dict:
 
     return result
 
-def group_by_type(title: str, gitlogs: List[Dict]) -> str:
+def gitlog_to_md_by(key: str, fmt: str, title: str, gitlogs: List[Dict]) -> str:
+    data = group_by_key(key, gitlogs)
 
-    data = group_by_key('type', gitlogs)
     markdown = f'# {title}\n\n'
-    for _type, _gitlog_items in data.items():
-        markdown += f"## {_type}\n\n"
+    for _keytype, _gitlog_items in data.items():
+        markdown += f"## {_keytype}\n\n"
         for _item in _gitlog_items:
-            markdown += f"- **{_item['date']}** `{_item['scope']}` {_item['title']} __{_item['author']}__\n"
+            markdown += fmt.format(**_item)
         markdown += "\n"
     return markdown
 
-def group_by_author(title: str, gitlogs: List[Dict]) -> str:
-    data = group_by_key('author', gitlogs)
-    markdown = f'# {title}\n\n'
-    for _author, _gitlog_items in data.items():
-        markdown += f"## {_author}\n\n"
-        for _item in _gitlog_items:
-            markdown += f"- **{_item['date']}** {_item['type']} `{_item['scope']}` {_item['title']}\n"
-        markdown += "\n"
-    return markdown
+def gitlog_to_md_by_type(title: str, gitlogs: List[Dict]) -> str:
+    fmt = "- **{date}** `{scope}` {title} __{author}__\n"
+    return gitlog_to_md_by('type', fmt, title, gitlogs)
 
-def group_by_scope(title: str, gitlogs: List[Dict]) -> str:
-    data = group_by_key('scope', gitlogs)
-    markdown = f'# {title}\n\n'
-    for _scope, _gitlog_items in data.items():
-        markdown += f"## {_scope}\n\n"
-        for _item in _gitlog_items:
-            markdown += f"- **{_item['date']}** {_item['type']} `{_item['author']}` {_item['title']}\n"
-        markdown += "\n"
-    return markdown
+def gitlog_to_md_by_scope(title: str, gitlogs: List[Dict]) -> str:
+    fmt = "- **{date}** {type} `{scope}` {title}\n"
+    return gitlog_to_md_by('scope', fmt, title, gitlogs)
+
+def gitlog_to_md_by_author(title: str, gitlogs: List[Dict]) -> str:
+    fmt = "- **{date}** {type} `{scope}` {title}\n"
+    return gitlog_to_md_by('author', fmt, title, gitlogs)
+
+# def gitlog_to_md_by_author(title: str, gitlogs: List[Dict]) -> str:
+#     data = group_by_key('author', gitlogs)
+#     markdown = f'# {title}\n\n'
+#     for _author, _gitlog_items in data.items():
+#         markdown += f"## {_author}\n\n"
+#         for _item in _gitlog_items:
+#             markdown += f"- **{_item['date']}** {_item['type']} `{_item['scope']}` {_item['title']}\n"
+#         markdown += "\n"
+#     return markdown
+
+# def gitlog_to_md_by_scope(title: str, gitlogs: List[Dict]) -> str:
+#     data = group_by_key('scope', gitlogs)
+#     markdown = f'# {title}\n\n'
+#     for _scope, _gitlog_items in data.items():
+#         markdown += f"## {_scope}\n\n"
+#         for _item in _gitlog_items:
+#             markdown += f"- **{_item['date']}** {_item['type']} `{_item['author']}` {_item['title']}\n"
+#         markdown += "\n"
+#     return markdown
 
 def gitlog_to_markdown(title: str, view: str, gitlogs: List[Dict]) -> str:
     _func_map = dict(
-        type=group_by_type,
-        author=group_by_author,
-        scope=group_by_scope
+        type=gitlog_to_md_by_type,
+        author=gitlog_to_md_by_author,
+        scope=gitlog_to_md_by_scope
     )
 
-    return _func_map.get(view, not_support)(title, gitlogs)
+    return _func_map.get(view, not_support)(title=title, gitlogs=gitlogs)
 
 @click.command()
 @click.option('--title', required=True, help='title of the changelog')
