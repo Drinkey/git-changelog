@@ -92,13 +92,12 @@ def gitlog_to_markdown(title: str, view: str, gitlogs: List[Dict]) -> str:
 
 @click.command()
 @click.option('--title', required=True, help='title of the changelog')
-@click.option('--file', required=True, help='read from file')
+@click.option('--file', required=True, help='path of changelog file')
 @click.option('--view', type=click.Choice(['type', 'scope', 'author']),
-default='type')
+              default='type', help='which view want to generate')
 def changelog(title, file, view):
     content = ''
     with open(file, 'r') as fp:
-        # print('reading file')
         content = fp.read()
     gitlogs = gitlog_parser(content)
     res = gitlog_to_markdown(title, view, gitlogs)
